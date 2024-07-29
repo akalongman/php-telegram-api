@@ -12,7 +12,7 @@ use Longman\TelegramBot\Entities\Entity;
  *
  * @method string getType()            Type of the message origin, always “chat”
  * @method int    getDate()            Date the message was sent originally in Unix time
- * @method Chat   getChat()            Chat that sent the message originally
+ * @method Chat   getSenderChat()            Chat that sent the message originally
  * @method string getAuthorSignature() Optional. For messages originally sent by an anonymous chat administrator, original message author signature
  */
 class MessageOriginChat extends Entity implements MessageOrigin

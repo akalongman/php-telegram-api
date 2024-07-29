@@ -1293,8 +1293,8 @@ class DB
             } elseif ($forward_origin instanceof MessageOriginHiddenUser) {
                 $forward_sender_name = $forward_origin->getSenderUserName();
             } elseif ($forward_origin instanceof MessageOriginChat) {
-                self::insertChat($forward_origin->getChat());
-                $forward_from_chat = $forward_origin->getChat()->getId();
+                self::insertChat($forward_origin->getSenderChat());
+                $forward_from_chat = $forward_origin->getSenderChat()->getId();
                 $forward_signature = $forward_origin->getAuthorSignature();
             } elseif ($forward_origin instanceof MessageOriginChannel) {
                 self::insertChat($forward_origin->getChat());

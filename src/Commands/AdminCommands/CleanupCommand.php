@@ -69,7 +69,7 @@ class CleanupCommand extends AdminCommand
      *
      * @var array
      */
-    protected static $default_tables_to_clean = [
+    protected static array $default_tables_to_clean = [
         'callback_query',
         'chosen_inline_result',
         'conversation',
@@ -85,7 +85,7 @@ class CleanupCommand extends AdminCommand
      *
      * @var array
      */
-    protected static $default_clean_older_than = [
+    protected static array $default_clean_older_than = [
         'callback_query'       => '30 days',
         'chat'                 => '365 days',
         'chosen_inline_result' => '30 days',
@@ -108,7 +108,7 @@ class CleanupCommand extends AdminCommand
      *
      * @return array
      */
-    private function getSettings($custom_time = ''): array
+    private function getSettings(string $custom_time = ''): array
     {
         $tables_to_clean      = self::$default_tables_to_clean;
         $user_tables_to_clean = $this->getConfig('tables_to_clean');
@@ -180,8 +180,24 @@ class CleanupCommand extends AdminCommand
                           )
                         )
                         OR (
+                          `channel_post_id` IS NOT NULL
+                          AND `channel_post_id` IN (
+                            SELECT `id`
+                            FROM `%5$s`
+                            WHERE `date` < \'%2$s\'
+                          )
+                        )
+                        OR (
                           `edited_message_id` IS NOT NULL
                           AND `edited_message_id` IN (
+                            SELECT `id`
+                            FROM `%6$s`
+                            WHERE `edit_date` < \'%2$s\'
+                          )
+                        )
+                        OR (
+                          `edited_channel_post_id` IS NOT NULL
+                          AND `edited_channel_post_id` IN (
                             SELECT `id`
                             FROM `%6$s`
                             WHERE `edit_date` < \'%2$s\'
@@ -369,7 +385,7 @@ class CleanupCommand extends AdminCommand
         $text    = $message->getText(true);
 
         // Dry run?
-        $dry_run = strpos($text, 'dry') !== false;
+        $dry_run = str_contains($text, 'dry');
         $text    = trim(str_replace('dry', '', $text));
 
         $settings = $this->getSettings($text);
