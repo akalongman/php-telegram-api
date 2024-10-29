@@ -347,7 +347,7 @@ class Telegram
 
         $command_class = $command_namespace . '\\' . $this->commandNameToClassName($command);
 
-        if (class_exists($command_class)) {
+        if (class_exists($command_class, false)) {
             return $command_class;
         }
 
